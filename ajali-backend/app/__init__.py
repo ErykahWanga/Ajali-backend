@@ -1,15 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-from flask_mail import Mail
-from flask_reuploaded import UploadSet, configure_uploads, IMAGES, VIDEO
 
-db = SQLAlchemy()
-migrate = Migrate()
-jwt = JWTManager()
-mail = Mail()
+app = Flask(__name__)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+# ... rest of your configuration ...
+jwt = JWTManager(app)
+mail = Mail(app)
 photos = UploadSet('photos', IMAGES)
 videos = UploadSet('videos', VIDEO)
 
