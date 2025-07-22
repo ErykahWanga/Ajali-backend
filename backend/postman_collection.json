@@ -1,0 +1,137 @@
+{
+	"info": {
+		"_postman_id": "c6a1b2c3-d4e5-f6a7-8901-234567890123",
+		"name": "Ajali! API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser1\",\n    \"email\": \"test1@example.com\",\n    \"password\": \"password123\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/auth/register", "host": [ "{{baseUrl}}" ], "path": [ "auth", "register" ] }
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set(\"jwt_token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test1@example.com\",\n    \"password\": \"password123\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/auth/login", "host": [ "{{baseUrl}}" ], "path": [ "auth", "login" ] }
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Incidents",
+			"item": [
+				{
+					"name": "Create Incident",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{jwt_token}}", "type": "string" } ] },
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Flooding on Moi Avenue\",\n    \"description\": \"Heavy rains caused flooding near the National Archives.\",\n    \"latitude\": -1.28333,\n    \"longitude\": 36.81667,\n    \"media_url\": \"https://example.com/image.jpg\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": { "raw": "{{baseUrl}}/incidents/", "host": [ "{{baseUrl}}" ], "path": [ "incidents", "" ] }
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Incidents",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{jwt_token}}", "type": "string" } ] },
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/incidents/", "host": [ "{{baseUrl}}" ], "path": [ "incidents", "" ] }
+					},
+					"response": []
+				},
+				{
+					"name": "Get Specific Incident",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{jwt_token}}", "type": "string" } ] },
+						"method": "GET",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/incidents/1", "host": [ "{{baseUrl}}" ], "path": [ "incidents", "1" ] }
+					},
+					"response": []
+				},
+				{
+					"name": "Update Incident (Owner)",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{jwt_token}}", "type": "string" } ] },
+						"method": "PUT",
+						"header": [],
+						"body": { "mode": "raw", "raw": "{\n    \"title\": \"UPDATED: Flooding on Moi Avenue\",\n    \"description\": \"Water is now receding.\"\n}", "options": { "raw": { "language": "json" } } },
+						"url": { "raw": "{{baseUrl}}/incidents/1", "host": [ "{{baseUrl}}" ], "path": [ "incidents", "1" ] }
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Incident (Owner)",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{jwt_token}}", "type": "string" } ] },
+						"method": "DELETE",
+						"header": [],
+						"url": { "raw": "{{baseUrl}}/incidents/1", "host": [ "{{baseUrl}}" ], "path": [ "incidents", "1" ] }
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Admin Update Status",
+					"request": {
+						"auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{jwt_token_admin}}", "type": "string" } ] },
+						"method": "PUT",
+						"header": [],
+						"body": { "mode": "raw", "raw": "{\n    \"status\": \"resolved\"\n}", "options": { "raw": { "language": "json" } } },
+						"url": { "raw": "{{baseUrl}}/admin/incidents/1/status", "host": [ "{{baseUrl}}" ], "path": [ "admin", "incidents", "1", "status" ] }
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [ { "listen": "prerequest", "script": { "type": "text/javascript", "exec": [ "" ] } }, { "listen": "test", "script": { "type": "text/javascript", "exec": [ "" ] } } ],
+	"variable": [
+		{ "key": "baseUrl", "value": "http://127.0.0.1:5000" },
+		{ "key": "jwt_token", "value": "your-user-token-here" },
+		{ "key": "jwt_token_admin", "value": "your-admin-token-here" }
+	]
+}
