@@ -1,6 +1,7 @@
 # /app/__init__.py
 
 from flask import Flask
+from flask_cors import CORS
 from .utils.config import DevelopmentConfig
 from .utils.database import db, bcrypt, jwt, migrate
 
@@ -14,6 +15,7 @@ def create_app(config_class=DevelopmentConfig):
     bcrypt.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
+    CORS(app)
 
     # Import and register blueprints
     from .routes.auth_routes import auth_bp
